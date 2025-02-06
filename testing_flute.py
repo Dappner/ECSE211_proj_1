@@ -12,8 +12,8 @@ class Flute:
         wait_ready_sensors()
         
         # Initialize sounds
-        self.note_c = sound.Sound(duration=0.5, pitch="C4", volume=80)
-        self.note_e = sound.Sound(duration=0.5, pitch="E4", volume=80)
+        self.note_c = sound.Sound(duration=0.5, pitch="C4", volume=100)
+        self.note_e = sound.Sound(duration=0.5, pitch="E4", volume=100)
         
         # Track last play time for each sound
         self.last_play_time_1 = 0
