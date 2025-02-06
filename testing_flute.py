@@ -38,7 +38,6 @@ class Flute:
         print("Flute is ready! Press touch sensors to play sounds.")
         print("- Touch Sensor 1: C4")
         print("- Touch Sensor 2: E4")
-        print("- Both Sensors: C major chord (C4 + E4)")
         
         try:
             while True:
@@ -46,10 +45,8 @@ class Flute:
                 
                 button1 = self.touch_sensor_1.is_pressed()
                 button2 = self.touch_sensor_2.is_pressed()
-                distance = self.us_sensor.get_distance_cm()
-                if(distance > 30):
-                    print("Distance: ", distance)
-                    continue 
+                distance = self.us_sensor.get_value()
+                print("Distance: ", distance)
                 if button1:
                     play_time = self.can_play_sound(self.last_play_time_1)
                     if play_time:
