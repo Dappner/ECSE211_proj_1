@@ -21,7 +21,7 @@ def play_sound_2():
     SOUND_2.wait_done()
 
 def play_combined_sound():
-    SOUND_3 = SOUND_1.append(SOUND_2).play()
+    SOUND_3 = SOUND_1.append_sound(SOUND_2).play()
     SOUND_3.wait_done()
 
 
