@@ -6,7 +6,7 @@ BP = brickpi3.BrickPi3()
 
 SOUND = sound.Sound(duration=0.3, pitch="A4", volume=60)
 
-def play_sound():
+def play_sound(sound):
     SOUND.play()
     SOUND.wait_done()
 
