@@ -46,7 +46,9 @@ class Flute:
                 button1 = self.touch_sensor_1.is_pressed()
                 button2 = self.touch_sensor_2.is_pressed()
                 distance = self.us_sensor.get_value()
-                print("Distance: ", distance)
+                if distance > 30:
+                    print("Disabled Playing")
+                    continue
                 if button1:
                     play_time = self.can_play_sound(self.last_play_time_1)
                     if play_time:
