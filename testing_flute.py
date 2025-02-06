@@ -1,5 +1,5 @@
 from utils import sound
-from utils.brick import TouchSensor, wait_ready_sensors, EV3ColorSensor
+from utils.brick import TouchSensor, wait_ready_sensors
 import time
 
 class Flute:
@@ -8,104 +8,75 @@ class Flute:
         self.touch_sensor_1 = TouchSensor(3)  # Port 3
         self.touch_sensor_2 = TouchSensor(4)  # Port 4
         
-        # Initialize base sounds
-        self.sound_1 = sound.Sound(duration=0.3, pitch="C4", volume=40)  # Lower individual volumes
-        self.sound_2 = sound.Sound(duration=0.3, pitch="E4", volume=40)  # for better chord balance
-        
-        # Create chord sound (C major)
-        self.chord_sound = sound.Sound(duration=0.3, pitch="C4", volume=40)
-        self.chord_sound.append(sound.Sound(duration=0.3, pitch="E4", volume=40))
-        
         # Wait for sensors to be ready
         wait_ready_sensors()
         
-        # Track sound states
-        self.sound_1_playing = False
-        self.sound_2_playing = False
-        self.chord_playing = False
+        # Initialize sounds
+        self.note_c = sound.Sound(duration=0.5, pitch="C4", volume=80)
+        self.note_e = sound.Sound(duration=0.5, pitch="E4", volume=80)
         
-    def start_sound_1(self):
-        """Start playing the first sound (C4) if not already playing"""
-        if not self.sound_1_playing:
-            self.sound_1.play()
-            self.sound_1_playing = True
-            
-    def start_sound_2(self):
-        """Start playing the second sound (E4) if not already playing"""
-        if not self.sound_2_playing:
-            self.sound_2.play()
-            self.sound_2_playing = True
-            
-    def start_chord(self):
-        """Start playing the chord if not already playing"""
-        if not self.chord_playing:
-            self.chord_sound.play()
-            self.chord_playing = True
-            
-    def stop_sound_1(self):
-        """Stop the first sound if playing"""
-        if self.sound_1_playing:
-            self.sound_1.stop()
-            self.sound_1_playing = False
-            
-    def stop_sound_2(self):
-        """Stop the second sound if playing"""
-        if self.sound_2_playing:
-            self.sound_2.stop()
-            self.sound_2_playing = False
-            
-    def stop_chord(self):
-        """Stop the chord if playing"""
-        if self.chord_playing:
-            self.chord_sound.stop()
-            self.chord_playing = False
-            
-    def stop_all_sounds(self):
-        """Stop all sounds"""
-        self.stop_sound_1()
-        self.stop_sound_2()
-        self.stop_chord()
+        # Track last play time for each sound
+        self.last_play_time_1 = 0
+        self.last_play_time_2 = 0
+        self.last_play_time_chord = 0
         
+        # Set minimum time between sound plays (in seconds)
+        self.play_interval = 0.4  # Adjust this to control how frequently sounds can play
+        
+    def can_play_sound(self, last_play_time):
+        """Check if enough time has passed to play a sound again"""
+        current_time = time.time()
+        if current_time - last_play_time >= self.play_interval:
+            return current_time
+        return None
+    
     def play_sound_on_button_press(self):
-        """Main loop to handle button presses and play sounds continuously"""
-        print("Flute is ready! Hold touch sensors to play sounds.")
+        """Main loop to handle button presses and play sounds"""
+        print("Flute is ready! Press touch sensors to play sounds.")
         print("- Touch Sensor 1: C4")
         print("- Touch Sensor 2: E4")
         print("- Both Sensors: C major chord (C4 + E4)")
         
         try:
             while True:
-                # Get current button states
-                button1_pressed = self.touch_sensor_1.is_pressed()
-                button2_pressed = self.touch_sensor_2.is_pressed()
+                current_time = time.time()
                 
-                # Handle chord (both buttons)
-                if button1_pressed and button2_pressed:
-                    self.stop_sound_1()
-                    self.stop_sound_2()
-                    self.start_chord()
+                # Check button states
+                button1 = self.touch_sensor_1.is_pressed()
+                button2 = self.touch_sensor_2.is_pressed()
+                
+                # Handle both buttons pressed - play chord
+                if button1 and button2:
+                    play_time = self.can_play_sound(self.last_play_time_chord)
+                    if play_time:
+                        print("Playing chord")
+                        self.note_c.play()
+                        self.note_e.play()
+                        self.last_play_time_chord = play_time
+                
+                # Handle individual buttons if not playing chord
                 else:
-                    # Handle individual buttons
-                    self.stop_chord()
+                    if button1:
+                        play_time = self.can_play_sound(self.last_play_time_1)
+                        if play_time:
+                            print("Playing C4")
+                            self.note_c.play()
+                            self.last_play_time_1 = play_time
                     
-                    if button1_pressed:
-                        self.start_sound_1()
-                    else:
-                        self.stop_sound_1()
-                        
-                    if button2_pressed:
-                        self.start_sound_2()
-                    else:
-                        self.stop_sound_2()
+                    if button2:
+                        play_time = self.can_play_sound(self.last_play_time_2)
+                        if play_time:
+                            print("Playing E4")
+                            self.note_e.play()
+                            self.last_play_time_2 = play_time
                 
-                time.sleep(0.02)  # Small delay to prevent CPU overuse
+                # Small delay to prevent CPU overuse
+                time.sleep(0.02)
                 
         except KeyboardInterrupt:
             print("\nProgram stopped by user")
-            self.stop_all_sounds()
         except Exception as e:
             print(f"\nAn error occurred: {e}")
-            self.stop_all_sounds()
 
 def main():
     flute = Flute()
