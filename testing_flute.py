@@ -41,20 +41,21 @@ class Flute:
             while True:
                 current_time = time.time()
                 
-                # Check button states
                 button1 = self.touch_sensor_1.is_pressed()
                 button2 = self.touch_sensor_2.is_pressed()
                 
-                # Handle both buttons pressed - play chord
                 if button1 and button2:
                     play_time = self.can_play_sound(self.last_play_time_chord)
                     if play_time:
                         print("Playing chord")
+                        self.note_c.set_volume(75)
+                        self.note_e.set_volume(75)
+                        self.note_c.reset_audio()
+                        self.note_e.reset_audio()
                         self.note_c.play()
                         self.note_e.play()
                         self.last_play_time_chord = play_time
                 
-                # Handle individual buttons if not playing chord
                 else:
                     if button1:
                         play_time = self.can_play_sound(self.last_play_time_1)
