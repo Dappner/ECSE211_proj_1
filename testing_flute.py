@@ -20,13 +20,21 @@ def play_sound_2():
     SOUND_2.play()
     SOUND_2.wait_done()
 
+def play_combined_sound():
+    SOUND_3 = SOUND_1.append(SOUND_2).play()
+    SOUND_3.wait_done()
+
+
 def play_sound_on_button_press():
     try:
         while True:
+            if TOUCH_SENSOR_1.is_pressed() and TOUCH_SENSOR_2.is_pressed():
+                play_combined_sound()
             if TOUCH_SENSOR_1.is_pressed():
                 play_sound_1()
             if TOUCH_SENSOR_2.is_pressed():
                 play_sound_2()
+
             time.sleep(0.02)  
 
     except KeyboardInterrupt:
