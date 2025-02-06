@@ -1,5 +1,4 @@
-from utils import sound
-from utils.brick import TouchSensor, wait_ready_sensor
+from utils.brick import TouchSensor, wait_ready_sensor, sound
 import time
 
 
