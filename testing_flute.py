@@ -1,15 +1,18 @@
 from utils import sound
-from utils.brick import TouchSensor, wait_ready_sensors
+from utils.brick import TouchSensor, wait_ready_sensors, EV3UltrasonicSensor
 import time
+
+POLLING_SPEED = 0.05
 
 class Flute:
     def __init__(self):
         # Initialize touch sensors
+        self.us_sensor = EV3UltrasonicSensor(1)  # Port 1
         self.touch_sensor_1 = TouchSensor(3)  # Port 3
         self.touch_sensor_2 = TouchSensor(4)  # Port 4
         
         # Wait for sensors to be ready
-        wait_ready_sensors()
+        wait_ready_sensors(True)
         
         # Initialize sounds
         self.note_c = sound.Sound(duration=0.5, pitch="C4", volume=100)
@@ -43,36 +46,26 @@ class Flute:
                 
                 button1 = self.touch_sensor_1.is_pressed()
                 button2 = self.touch_sensor_2.is_pressed()
-                
-                if button1 and button2:
-                    play_time = self.can_play_sound(self.last_play_time_chord)
+                distance = self.us_sensor.get_distance_cm()
+                if(distance > 30):
+                    print("Distance: ", distance)
+                    continue 
+                if button1:
+                    play_time = self.can_play_sound(self.last_play_time_1)
                     if play_time:
-                        print("Playing chord")
-                        self.note_c.set_volume(75)
-                        self.note_e.set_volume(75)
-                        self.note_c.reset_audio()
-                        self.note_e.reset_audio()
+                        print("Playing C4")
                         self.note_c.play()
-                        self.note_e.play()
-                        self.last_play_time_chord = play_time
+                        self.last_play_time_1 = play_time
                 
-                else:
-                    if button1:
-                        play_time = self.can_play_sound(self.last_play_time_1)
-                        if play_time:
-                            print("Playing C4")
-                            self.note_c.play()
-                            self.last_play_time_1 = play_time
-                    
-                    if button2:
-                        play_time = self.can_play_sound(self.last_play_time_2)
-                        if play_time:
-                            print("Playing E4")
-                            self.note_e.play()
-                            self.last_play_time_2 = play_time
+                if button2:
+                    play_time = self.can_play_sound(self.last_play_time_2)
+                    if play_time:
+                        print("Playing E4")
+                        self.note_e.play()
+                        self.last_play_time_2 = play_time
                 
                 # Small delay to prevent CPU overuse
-                time.sleep(0.02)
+                time.sleep(POLLING_SPEED)
                 
         except KeyboardInterrupt:
             print("\nProgram stopped by user")
