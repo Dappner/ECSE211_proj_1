@@ -15,38 +15,47 @@ import time
 class Flute:
     def __init__(self):
         # Initialize Flute Sensors
-        self.touch_sensor_1 = TouchSensor(3)
-        self.touch_sensor_2 = TouchSensor(4)
-        self.touch_sensor_3 = TouchSensor("D")
+        self.touch_sensor_1 = TouchSensor(2)
+        self.touch_sensor_2 = TouchSensor(3)
+        self.touch_sensor_3 = TouchSensor(1)
 
         # sensor to start stop
-        self.stop_sensor = TouchSensor()
+        self.stop_sensor = TouchSensor(4)
 
         # Motor Port
-        self.motor = Motor("")
+        self.motor = Motor("D")
 
         self.drums_playing = False
 
         # Wait for sensors to be ready
         wait_ready_sensors()
 
+        self.NOTE_DURATION = 0.5
+        self.NOTE_VOLUME = 80
+
         self.notes = [
             {
                 "sensor": self.touch_sensor_1,
                 "label": "Note C",
-                "sound": sound.Sound(duration=1, pitch="C4", volume=100),
+                "sound": sound.Sound(
+                    duration=self.NOTE_DURATION, pitch="C4", volume=self.NOTE_VOLUME
+                ),
                 "last_play_time": 0,
             },
             {
                 "sensor": self.touch_sensor_2,
                 "label": "Note E",
-                "sound": sound.Sound(duration=1, pitch="E4", volume=100),
+                "sound": sound.Sound(
+                    duration=self.NOTE_DURATION, pitch="E4", volume=self.NOTE_VOLUME
+                ),
                 "last_play_time": 0,
             },
             {
                 "sensor": self.touch_sensor_3,
                 "label": "Note F",
-                "sound": sound.Sound(duration=1, pitch="F4", volume=100),
+                "sound": sound.Sound(
+                    duration=self.NOTE_DURATION, pitch="F4", volume=self.NOTE_VOLUME
+                ),
                 "last_play_time": 0,
             },
         ]
@@ -56,7 +65,9 @@ class Flute:
             {
                 "sensors": [self.touch_sensor_1, self.touch_sensor_2],
                 "label": "Chord G4",
-                "sound": sound.Sound(duration=1, pitch="G4", volume=100),
+                "sound": sound.Sound(
+                    duration=self.NOTE_DURATION, pitch="G4", volume=self.NOTE_VOLUME
+                ),
                 "last_play_time": 0,
             }
         ]
@@ -76,7 +87,7 @@ class Flute:
                 self.toggle_drums()
                 # Wait until it is released
                 while self.stop_sensor.is_pressed():
-                    time.sleep(0.1)
+                    time.sleep(0.05)
 
             # Check for Chord
             for chord in self.chords:
@@ -98,6 +109,7 @@ class Flute:
                     if note["sensor"].is_pressed():
                         play_time = self.can_play_sound(note["last_play_time"])
                         if play_time:
+                            print(f"Playing {note['label']}")
                             note["sound"].play()
                             note["last_play_time"] = play_time
 
