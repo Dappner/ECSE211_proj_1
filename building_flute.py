@@ -56,7 +56,7 @@ class Flute:
                 "sound": sound.Sound(
                     duration=self.NOTE_DURATION,
                     pitch="F4",
-                    volume=self.NOTE_VOLUME + 10,
+                    volume=self.NOTE_VOLUME + 20,
                 ),
             },
         ]
@@ -85,6 +85,9 @@ class Flute:
             # Check for start tstop
             if self.stop_sensor.is_pressed():
                 self.toggle_drums()
+                # Debounce to prevent hold
+                while self.stop_sensor.is_pressed():
+                    time.sleep(0.05)
 
             # Check for Chord
             for chord in self.chords:
