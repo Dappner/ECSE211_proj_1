@@ -33,6 +33,8 @@ class Flute:
         self.NOTE_DURATION = 0.5
         self.NOTE_VOLUME = 80
 
+        self.last_play_time = 0
+
         self.notes = [
             {
                 "sensor": self.touch_sensor_1,
@@ -40,7 +42,6 @@ class Flute:
                 "sound": sound.Sound(
                     duration=self.NOTE_DURATION, pitch="C4", volume=self.NOTE_VOLUME
                 ),
-                "last_play_time": 0,
             },
             {
                 "sensor": self.touch_sensor_2,
@@ -48,7 +49,6 @@ class Flute:
                 "sound": sound.Sound(
                     duration=self.NOTE_DURATION, pitch="E4", volume=self.NOTE_VOLUME
                 ),
-                "last_play_time": 0,
             },
             {
                 "sensor": self.touch_sensor_3,
@@ -56,7 +56,6 @@ class Flute:
                 "sound": sound.Sound(
                     duration=self.NOTE_DURATION, pitch="F4", volume=self.NOTE_VOLUME
                 ),
-                "last_play_time": 0,
             },
         ]
 
@@ -68,7 +67,6 @@ class Flute:
                 "sound": sound.Sound(
                     duration=self.NOTE_DURATION, pitch="G4", volume=self.NOTE_VOLUME
                 ),
-                "last_play_time": 0,
             }
         ]
 
@@ -94,7 +92,7 @@ class Flute:
                 # Checks to see if all sensors in code are pressed
                 if all(sensor.is_pressed() for sensor in chord["sensors"]):
                     # If can play, returns play time
-                    play_time = self.can_play_sound(chord["last_play_time"])
+                    play_time = self.can_play_sound()
                     if play_time:
                         print(f"Playing {chord['label']}")
                         chord["sound"].play()
@@ -107,7 +105,7 @@ class Flute:
             if not chord_played:
                 for note in self.notes:
                     if note["sensor"].is_pressed():
-                        play_time = self.can_play_sound(note["last_play_time"])
+                        play_time = self.can_play_sound()
                         if play_time:
                             print(f"Playing {note['label']}")
                             note["sound"].play()
@@ -125,15 +123,15 @@ class Flute:
     def toggle_drums(self):
         self.drums_playing = not self.drums_playing
         if self.drums_playing:
-            self.motor.set_power(20)
+            self.motor.set_power(40)
         else:
             self.motor.set_power(0)
 
     # Returns current time if can play, otherwise returns none
-    def can_play_sound(self, last_play_time):
+    def can_play_sound(self):
         """Check if enough time has passed to play a sound again"""
         current_time = time.time()
-        if current_time - last_play_time >= self.play_interval:
+        if current_time - self.last_play_time >= self.play_interval:
             return current_time
         return None
 
@@ -155,4 +153,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
