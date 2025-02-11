@@ -38,6 +38,7 @@ class Flute:
 
         self.base_motor_speed = 50
         self.motor_speed = self.base_motor_speed
+        self.gyro_val = self.gyro.get_encoder()
 
         self.last_play_time = 0
 
@@ -126,24 +127,19 @@ class Flute:
             time.sleep(0.02)
 
     def update_motor_speed(self):
-        # Get Delta
-        gyro_delta = self.gyro.get_encoder()
-        # Reset the encoder so that we measure just the delta next time
-        self.gyro.offset_encoder(self.gyro.get_encoder())
+        # Measure current Gyro gyro_val
+        #
+        current_val = self.gyro.get_encoder()
 
+        delta = current_val - self.gyro_val
         # Compute a target motor speed:
         #   - Start from a base speed
         #   - Add a fraction of the gyro delta (tweak the divisor as needed)
-        target_speed = self.base_motor_speed + (gyro_delta / 100.0)
+        self.motor_speed = self.base_motor_speed + (delta / 100.0)
 
-        print(target_speed)
-        # Smoothly update the motor speed toward the target speed.
         # The smoothing factor (alpha) determines how fast the speed reacts.
-        alpha = 0.2
-        self.motor_speed = alpha * target_speed + (1 - alpha) * self.motor_speed
-
-        # Clamp the motor speed to a safe range (for example, 0 to 100)
         self.motor_speed = max(0, min(100, self.motor_speed))
+
         self.motor.set_power(self.motor_speed)
 
     def print_instructions(self):
