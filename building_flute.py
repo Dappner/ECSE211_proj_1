@@ -77,7 +77,7 @@ class Flute:
         except KeyboardInterrupt:
             print("\nProgram stopped by user")
         except Exception as e:
-            print("\n" + f"An error occurred: {e}")
+            print("\nAn error occurred: ", e)
 
 def main():
     flute = Flute()
