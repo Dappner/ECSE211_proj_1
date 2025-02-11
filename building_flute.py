@@ -1,11 +1,7 @@
 from utils import sound
 from utils.brick import TouchSensor, wait_ready_sensors, Motor
 import time
-import brickpi3
 # from dataclasses import dataclass, field
-
-
-BP = brickpi3.BrickPi()
 
 # @dataclass
 # class Note:
@@ -29,7 +25,8 @@ class Flute:
         self.motor = Motor("D")
 
         # Gyro Motor Port
-        BP.offset_motor_encoder(BP.PORT_A, BP.get_motor_encoder(BP.PORT_A))
+        self.gyro = Motor("A")
+        self.gyro.offset_encoder(self.gyro.get_encoder())
 
         self.drums_playing = False
 
@@ -96,7 +93,7 @@ class Flute:
                     time.sleep(0.05)
 
             # Check for motor speed
-            speed = BP.get_motor_encoder(BP.PORT_A)
+            speed = self.gyro.get_encoder()
             print(speed)
 
             # Check for Chord
