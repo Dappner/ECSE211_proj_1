@@ -99,6 +99,8 @@ class Flute:
             if self.drums_playing:
                 self.update_motor_speed()
 
+            print(self.motor_speed)
+
             # Check for Chord
             for chord in self.chords:
                 # Checks to see if all sensors in code are pressed
@@ -138,7 +140,7 @@ class Flute:
 
         # Smoothly update the motor speed toward the target speed.
         # The smoothing factor (alpha) determines how fast the speed reacts.
-        alpha = 0.1
+        alpha = 0.2
         self.motor_speed = alpha * target_speed + (1 - alpha) * self.motor_speed
 
         # Clamp the motor speed to a safe range (for example, 0 to 100)
