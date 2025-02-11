@@ -83,9 +83,6 @@ class Flute:
             # Check for start tstop
             if self.stop_sensor.is_pressed():
                 self.toggle_drums()
-                # Wait until it is released
-                while self.stop_sensor.is_pressed():
-                    time.sleep(0.05)
 
             # Check for Chord
             for chord in self.chords:
