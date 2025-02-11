@@ -7,19 +7,21 @@ class Flute:
         # Initialize touch sensors
         self.touch_sensor_1 = TouchSensor(3)  # Port 3
         self.touch_sensor_2 = TouchSensor(4)  # Port 4
+        self.touch_sensor_3 = TouchSensor('D') # Port MD
         
         # Wait for sensors to be ready
         wait_ready_sensors()
         
         # Initialize sounds
-        self.note_c = sound.Sound(duration=0.5, pitch = "C4", volume=100)
+        self.note_c = sound.Sound(duration=0.5, pitch = "C4", volume=100) 
         self.note_e = sound.Sound(duration=0.5, pitch = "E4", volume=100)
         self.note_g = sound.Sound(duration=0.5, pitch = "G4", volume=100)
-
+        self.note_f = sound.Sound(duration=0.5, pitch = "F4", volume=100)
 
         # Track last play time for each sound
         self.last_play_time_1 = 0
         self.last_play_time_2 = 0
+        self.last_play_time_3 = 0
         self.last_play_time_1and2 = 0
         
         # Set minimum time between sound plays (in seconds)
@@ -37,7 +39,8 @@ class Flute:
         print("Flute is ready! Press touch sensors to play sounds.")
         print("- Touch Sensor 1: C4")
         print("- Touch Sensor 2: E4")
-        print("- Both Sensors: C major chord (C4 + E4)")
+        print("- Touch Sensor 3: F4")
+        print("  Touch Sensors 1 & 2 : G4")
         
         try:
             while True:
@@ -46,6 +49,7 @@ class Flute:
                 # Check button states
                 button1 = self.touch_sensor_1.is_pressed()
                 button2 = self.touch_sensor_2.is_pressed()
+                button3= self.touch_sensor_3.is_pressed()
                 
                 # Handle both buttons pressed - play chord
                 if button1 and button2:
@@ -70,6 +74,13 @@ class Flute:
                             print("Playing E4")
                             self.note_e.play()
                             self.last_play_time_2 = play_time
+                    
+                    if button3:
+                        play_time = self.can_play_sound(self.last_play_time_3)
+                        if play_time:
+                            print("Playing F4")
+                            self.note_g.play()
+                            self.last_play_time_3 = play_time
                 
                 # Small delay to prevent CPU overuse
                 time.sleep(0.02)
