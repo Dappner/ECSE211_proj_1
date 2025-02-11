@@ -38,7 +38,6 @@ class Flute:
 
         self.base_motor_speed = 50
         self.motor_speed = self.base_motor_speed
-        self.gyro_val = self.gyro.get_encoder()
 
         self.last_play_time = 0
 
@@ -132,8 +131,7 @@ class Flute:
         current_val = self.gyro.get_encoder()
 
         # compute delta to previous val
-        delta = current_val - self.gyro_val
-        print(self.gyro_val)
+        delta = current_val
 
         self.motor_speed = self.base_motor_speed + (delta / 10)
 
