@@ -131,11 +131,11 @@ class Flute:
         #
         current_val = self.gyro.get_encoder()
 
+        # compute delta to previous val
         delta = current_val - self.gyro_val
-        # Compute a target motor speed:
-        #   - Start from a base speed
-        #   - Add a fraction of the gyro delta (tweak the divisor as needed)
-        self.motor_speed = self.base_motor_speed + (delta / 25.0)
+        print(self.gyro_val)
+
+        self.motor_speed = self.base_motor_speed + (delta / 10)
 
         # The smoothing factor (alpha) determines how fast the speed reacts.
         self.motor_speed = max(0, min(100, self.motor_speed))
