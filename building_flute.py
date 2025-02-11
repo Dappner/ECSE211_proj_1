@@ -30,7 +30,7 @@ class Flute:
         # Wait for sensors to be ready
         wait_ready_sensors()
 
-        self.NOTE_DURATION = 0.5
+        self.NOTE_DURATION = 0.4
         self.NOTE_VOLUME = 80
 
         self.last_play_time = 0
@@ -73,7 +73,7 @@ class Flute:
         ]
 
         # Set minimum time between sound plays (in seconds)
-        self.play_interval = 0.6
+        self.play_interval = 0.4
 
     def main_loop(self):
         """Main loop to handle button presses and play sounds"""
