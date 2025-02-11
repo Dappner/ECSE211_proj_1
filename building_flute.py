@@ -135,7 +135,7 @@ class Flute:
         # Compute a target motor speed:
         #   - Start from a base speed
         #   - Add a fraction of the gyro delta (tweak the divisor as needed)
-        self.motor_speed = self.base_motor_speed + (delta / 100.0)
+        self.motor_speed = self.base_motor_speed + (delta / 25.0)
 
         # The smoothing factor (alpha) determines how fast the speed reacts.
         self.motor_speed = max(0, min(100, self.motor_speed))
