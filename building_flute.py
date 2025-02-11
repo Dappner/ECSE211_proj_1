@@ -54,7 +54,9 @@ class Flute:
                 "sensor": self.touch_sensor_3,
                 "label": "Note F",
                 "sound": sound.Sound(
-                    duration=self.NOTE_DURATION, pitch="F4", volume=self.NOTE_VOLUME
+                    duration=self.NOTE_DURATION,
+                    pitch="F4",
+                    volume=self.NOTE_VOLUME + 10,
                 ),
             },
         ]
@@ -71,7 +73,7 @@ class Flute:
         ]
 
         # Set minimum time between sound plays (in seconds)
-        self.play_interval = 0.4
+        self.play_interval = 0.6
 
     def main_loop(self):
         """Main loop to handle button presses and play sounds"""
