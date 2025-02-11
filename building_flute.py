@@ -20,7 +20,7 @@ class Flute:
         # Track last play time for each sound
         self.last_play_time_1 = 0
         self.last_play_time_2 = 0
-        self.last_play_time_1&2 = 0
+        self.last_play_time_1and2 = 0
         
         # Set minimum time between sound plays (in seconds)
         self.play_interval = 0.4  # Adjust this to control how frequently sounds can play
@@ -49,11 +49,11 @@ class Flute:
                 
                 # Handle both buttons pressed - play chord
                 if button1 and button2:
-                    play_time = self.can_play_sound(self.last_play_time_1&2)
+                    play_time = self.can_play_sound(self.last_play_time_1and2)
                     if play_time:
                         print("Playing G4")
                         self.note_g.play()
-                        self.last_play_time_1&2 = play_time
+                        self.last_play_time_1and2 = play_time
                 
                 # Handle individual buttons if not playing chord
                 else:
@@ -77,7 +77,7 @@ class Flute:
         except KeyboardInterrupt:
             print("\nProgram stopped by user")
         except Exception as e:
-            print(f"\nAn error occurred: {e}")
+            print("\n" + f"An error occurred: {e}")
 
 def main():
     flute = Flute()
