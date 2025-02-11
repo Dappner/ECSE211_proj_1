@@ -96,8 +96,8 @@ class Flute:
                     if play_time:
                         print(f"Playing {chord['label']}")
                         chord["sound"].play()
-                        chord["last_play_time"] = play_time
                         # If a chord is played, you want to skip individual notes this cycle.
+                        self.last_play_time = play_time
                         chord_played = True
                         break
 
@@ -109,7 +109,7 @@ class Flute:
                         if play_time:
                             print(f"Playing {note['label']}")
                             note["sound"].play()
-                            note["last_play_time"] = play_time
+                            self.last_play_time = play_time
 
             time.sleep(0.02)
 
