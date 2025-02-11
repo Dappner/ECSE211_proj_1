@@ -36,6 +36,8 @@ class Flute:
         self.NOTE_DURATION = 0.4
         self.NOTE_VOLUME = 80
 
+        self.motor_speed = 50
+
         self.last_play_time = 0
 
         self.notes = [
@@ -93,8 +95,11 @@ class Flute:
                     time.sleep(0.05)
 
             # Check for motor speed
-            speed = self.gyro.get_encoder()
-            print(speed)
+            speed_modifier = self.gyro.get_encoder() / 100
+
+            if self.drums_playing:
+                self.motor_speed += speed_modifier
+                self.motor.set_power(self.motor_speed)
 
             # Check for Chord
             for chord in self.chords:
@@ -132,7 +137,7 @@ class Flute:
     def toggle_drums(self):
         self.drums_playing = not self.drums_playing
         if self.drums_playing:
-            self.motor.set_power(40)
+            self.motor.set_power(self.motor_speed)
         else:
             self.motor.set_power(0)
 
